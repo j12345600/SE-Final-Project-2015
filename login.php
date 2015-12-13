@@ -1,9 +1,5 @@
 <?php
-	 $dbhost = "localhost";
-   $dbuser = "root";
-   $dbpass = "root";
-   $dbname = "dbname";
-   
+   include "config.php";   
    //Connect to MySQL Server
    mysql_connect($dbhost, $dbuser, $dbpass);
 
