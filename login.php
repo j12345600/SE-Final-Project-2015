@@ -21,9 +21,11 @@
 		$data = $row['name'];
 		$cookieData = (object) array( "data" => $data, "expiry" => $expiry);
    		setcookie("login", json_encode( $cookieData ), $expiry);
-   		echo "Welcome " . $data . "!<br />";
+   		echo "<h3 id=welcom>Welcome " . $data ." </h3>";
+   		echo "<p id=timelf align='center'>Time left:".( $expiry-time())." Sec(s)</p><div id=content>" ;
    		readfile("form.html");
+   	  echo'</div>';
    	} 
    else {echo "Login in fail!";
- 		readfile("login form.html");}
+ 		readfile("loginform.html");}
 ?>
