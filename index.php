@@ -18,7 +18,7 @@
 			#timelf {
 						position: absolute;
 						right:10px;
-    			  width:150px;
+						width:150px;
 					  height:19px; 
 					  margin: auto;
 					  border: 1px solid #FF8C8C; 
@@ -40,6 +40,7 @@
    <body>
 
       <div id='ajaxDiv' >
+	 
       	<?php
 			   if (isset($_COOKIE["login"])){
 			   	$cookie = json_decode( $_COOKIE[ "login" ] );

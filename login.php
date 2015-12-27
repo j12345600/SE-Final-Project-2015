@@ -19,7 +19,8 @@
    if($row){
    	$expiry = time() + 300;
 		$data = $row['name'];
-		$cookieData = (object) array( "data" => $data, "expiry" => $expiry);
+		$bankAccount=$row['accountNum'];
+		$cookieData = (object) array( "data" => $data, "expiry" => $expiry,"bankAct"=>$bankAccount);
    		setcookie("login", json_encode( $cookieData ), $expiry);
    		echo "<h3 id=welcom>Welcome " . $data ." </h3>";
    		echo "<p id=timelf align='center'>Time left:".( $expiry-time())." Sec(s)</p><div id=content>" ;
@@ -28,4 +29,6 @@
    	} 
    else {echo "Login in fail!";
  		readfile("loginform.html");}
+		
+
 ?>

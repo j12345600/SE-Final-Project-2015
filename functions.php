@@ -11,12 +11,21 @@
 	   header('Location: ' . $url, true, $statusCode);
 	   die();
 	}
+	$mode=$_GET['mode'];
+	
 ?>
 <html>
 	<head>
-			<script type="text/javascript" src="/jquery/jquery.js" ></script>
+	<link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
+	  <script type="text/javascript" src="/jquery/jquery.js" ></script>
       <script type="text/javascript" src="/jquery/jquery.cookie.js"></script>
       <script type="text/javascript" src="/jquery/functions.js"></script>
+	  <script type="text/javascript" src="/jquery/jquery-ui.min.js"></script>
+	   <script>
+  $(function() {
+    $( "#datepicker" ).datepicker();
+  });
+  </script>
       <style>
 			#welcom {
 					  float: left;
@@ -41,11 +50,18 @@
 			.fbutton{
 					width:200%;
 				}
+			#interact{
+				position: absolute;
+				top:60px;
+				font-size: 250%;
+				
+			}
 	</style>
 	</head>
    <body>
 
       <div id='ajaxDiv' >
+		<a href="../bank" target="_self" style="text-decoration:none;color:blue;">主頁</a>
       	<?php
 			   if (isset($_COOKIE["login"])){
 			   	$cookie = json_decode( $_COOKIE[ "login" ] );
@@ -59,10 +75,28 @@
 	      	</script>";
 				}
 				else{
-				redirect("../",303);
+				redirect("../bank",303);
 				}
+				echo "<div id='interact' >";
+				if($mode=='trans'){
+				echo"<P> 選擇單筆或預約轉帳</p>
+					<form>
+					<table>
+					<tr><td><input type='button' onclick='transfer(\"single\")' value='單筆'/></td></tr>
+					<tr><td><input type='button' onclick='transfer(\"rsvd\")' value='預約'/></td></tr>
+					</table>
+					</form></div>";
+				}
+				else if($mode=='check'){
+					
+				}
+				else if($mode=='debt'){
+					
+				}
+				else redirect("../bank",303);
+				
 				?>
-
+		
       </div>
    </body>
 </html>
