@@ -52,5 +52,55 @@
 	   }
 	   
    }
+   else if($mode=='chkStatus'){
+	   $query= "SELECT * FROM account_list WHERE accountNum = '$bankAct'";
+	   $qry_result=mysql_query($query) or die(mysql_error());
+	   $row = mysql_fetch_array($qry_result);
+	   if($row) {
+		   $debt=$row['debt'];
+	   }
+	   else {echo "cann't find account $bankAct";exit();}
+	   echo $debt;
+   }
+   else if($mode=='pay'){
+	   $query= "SELECT * FROM account_list WHERE accountNum = '$bankAct'";
+	   $qry_result=mysql_query($query) or die(mysql_error());
+	   $row = mysql_fetch_array($qry_result);
+	   echo "<p>還款結果</p>";
+	   if($row) {
+		   $debt=$row['debt'];
+		   $balance=$row['balance'];
+	   }
+	   else {echo "cann't find account $bankAct";exit();}
+	   if($balance>=$debt){
+		   $left=$balance-$debt;
+		   $query="UPDATE account_list SET balance='$left' WHERE accountNum='$bankAct'";
+		   mysql_query($query) or die(mysql_error());
+		   $query="UPDATE account_list SET debt='0' WHERE accountNum='$bankAct'";
+		   mysql_query($query) or die(mysql_error());
+		   echo "
+		 <table>
+		<tr><td>還款成功</td></tr>
+		<tr><td><button type=\"reset\" onclick=\"location.href='../bank'\">返回選單</button></td></tr>
+		</table>";
+	   }
+	   else {
+		 echo "
+		 <table>
+		<tr><td>餘額不足</td></tr>
+		<tr><td><button type=\"reset\" onclick=\"location.href='../bank'\">返回選單</button></td></tr>
+		</table>";
+	   }
+   }
+   else if($mode=='balance'){
+	   $query= "SELECT * FROM account_list WHERE accountNum = '$bankAct'";
+	   $qry_result=mysql_query($query) or die(mysql_error());
+	   $row = mysql_fetch_array($qry_result);
+	   if($row) {
+		   $balance=$row['balance'];
+	   }
+	   else {echo "cann't find account $bankAct";exit();}
+	   echo $balance;
+   }
    
 ?>

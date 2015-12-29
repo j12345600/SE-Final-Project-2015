@@ -28,7 +28,7 @@
   </script>
       <style>
 			#welcom {
-					  float: left;
+				float: left;
 			}
 			#timelf {
 						position: absolute;
@@ -88,10 +88,22 @@
 					</form></div>";
 				}
 				else if($mode=='check'){
-					
+					echo "<P> 查詢借貸狀況或繳納借款本息</p>
+					<form>
+					<table>
+					<tr><td><input type='button' onclick='chkHistory(\"balance\")' value='存款餘額查詢'/></td></tr>
+					<tr><td><input type='button' onclick='chkHistory(\"log\")' value='交易紀錄查詢'/></td></tr>
+					</table>
+					</form></div>";
 				}
 				else if($mode=='debt'){
-					
+				echo "<P> 查詢借貸狀況或繳納借款本息</p>
+					<form>
+					<table>
+					<tr><td><input type='button' onclick='debt(\"chkStatus\")' value='查詢借貸狀況'/></td></tr>
+					<tr><td><input type='button' onclick='debt(\"pay\")' value='繳納借款本息'/></td></tr>
+					</table>
+					</form></div>";
 				}
 				else redirect("../bank",303);
 				

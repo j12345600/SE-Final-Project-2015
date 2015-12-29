@@ -19,7 +19,6 @@
 			                		self.totalSeconds=parseInt(msg);
 			                    $("#timelf").html("<p id=timelf>Time left: "+self.totalSeconds+" Sec(s)</p>");
 			                },
-			
 			                 error:function(xhr, ajaxOptions, thrownError){ 
 			                    alert(xhr.status); 
 			                    alert(thrownError); 
@@ -121,7 +120,7 @@ var login=function(){
 		
 		var content="<p>Date: <input type='text' id='datepicker'></p>"
 		+"<input type='button' onclick='transfer()' value='下一步'/>"
-		+" <script>$( \"#datepicker\" ).datepicker({inline: true}); </script>"
+		+" <script>$( \"#datepicker\" ).datepicker({inline: true,minDate: 0,dateFormat:'yy/mm/dd'}); </script>"
 		$('#interact').html(content);
 		window.localStorage["step"]=2;
 	}
@@ -139,7 +138,7 @@ var login=function(){
 		+"<tr><td>銀行帳號:"+window.localStorage['bankAccount']+"</td></tr>"
 		+"<tr><td>金額:"+window.localStorage['amount']+"</td></tr>";
 		if(window.localStorage['transMode']=='rsvd')
-			content+="<tr><td>日期(月/日/年):"+window.localStorage['date']+"</td></tr>";
+			content+="<tr><td>日期(年/月/日):"+window.localStorage['date']+"</td></tr>";
 		content+="</table>"
 		+"<input type='button' onclick='transfer()' value='確認轉帳'/>"
 		+"<button type=\"reset\" onclick=\"location.href='../bank'\">取消轉帳</button>";
@@ -155,7 +154,7 @@ var login=function(){
 			var date=window.localStorage['date'];
 	$.ajax({
 		url: "performFuncs.php",
-		data: {"mode": mode,"BC": BC,"BAC": BAC,"amount": amount,"date",date},
+		data: {"mode": mode,"BC": BC,"BAC": BAC,"amount": amount,"date":date},
 		type:"POST",
 		dataType:'text',
 		success: function(msg){
@@ -169,3 +168,140 @@ var login=function(){
 	});
    }
  };
+ 
+ var debt=function(debtMode){
+	if(debtMode=='chkStatus'||debtMode=='pay'){
+		window.localStorage["step"]=0;
+		window.localStorage['debtMode']=debtMode;
+		var debt;
+		
+		$.ajax({
+		url: "performFuncs.php",
+		async: false,
+		data: {"mode": 'chkStatus'},
+		type:"POST",
+		dataType:'text',
+		success: function(msg){
+			debt=msg;
+			
+		},
+		 error:function(xhr, ajaxOptions, thrownError){ 
+			alert(xhr.status); 
+			alert(thrownError); 
+		 }
+	});
+	
+		var content;
+		if(debtMode=='chkStatus')content="<P>借貸狀況</p>"
+		else content="<P> 應繳金額</p>"
+		if (debt==0) {
+			content+="<table> <tr><td>並無債務需要繳</td></tr>"
+			+"<tr><td><button type=\"reset\" onclick=\"location.href='../bank'\">返回選單</button></td></tr></table>";
+			
+		}
+		else{
+			content+="<table><tr><td>積欠金額: "+debt+"</td></tr>"	
+			if(debtMode=='chkStatus') content+="<tr><td><button type=\"reset\" onclick=\"location.href='../bank'\">返回選單</button></td></tr></table>";
+			else {
+				content+="<tr><td><input type='button' onclick='debt()' value='下一步'/></td></tr></table>";
+				window.localStorage["step"]=1;
+				window.localStorage["debt"]=debt;
+			}
+		}
+		
+		$('#interact').html(content);
+	}
+	//verify information
+	else if(window.localStorage["step"]==1){
+		
+		var content="<p>請確認是否繳款</p>"
+		+"<table>"
+		+"<tr><td>金額:"+window.localStorage['debt']+"</td></tr>";
+		content+="</table>"
+		+"<input type='button' onclick='debt()' value='確認繳款'/>"
+		+"<button type=\"reset\" onclick='debt(\"pay\")'>取消繳款</button>";
+		$('#interact').html(content);
+		window.localStorage["step"]=2;
+	}
+   else if(window.localStorage["step"]==2){
+	$.ajax({
+		url: "performFuncs.php",
+		data: {"mode": window.localStorage['debtMode']},
+		type:"POST",
+		dataType:'text',
+		success: function(msg){
+			$("#interact").html(msg);
+		},
+		 error:function(xhr, ajaxOptions, thrownError){ 
+			alert(xhr.status); 
+			alert(thrownError); 
+		 }
+	});
+	
+   }
+ };
+ 
+  var chkHistory=function(historyMode){
+	if(historyMode=='balance'){
+		var balance;
+		
+		$.ajax({
+		url: "performFuncs.php",
+		async: false,
+		data: {"mode": historyMode},
+		type:"POST",
+		dataType:'text',
+		success: function(msg){
+			balance=msg;
+			
+		},
+		 error:function(xhr, ajaxOptions, thrownError){ 
+			alert(xhr.status); 
+			alert(thrownError); 
+		 }
+	});
+	
+		var content;
+		content="<P>查詢餘額</p>"
+		content+="<table><tr><td>帳戶餘額額: "+balance+"元</td></tr>"	
+		content+="<tr><td><button type=\"reset\" onclick=\"location.href='../bank'\">返回選單</button></td></tr></table>";
+		$('#interact').html(content);
+	}
+	//verify information
+	else if(historyMode=='log'){
+		var content="<p>選擇日期: <input type='text' id='datepicker' ></p>"
+		+"<input type='button' onclick='chkHistory()' value='下一步'/>"
+		+" <script>$( \"#datepicker\" ).datepicker({inline: true, maxDate: 0,dateFormat:'yy/mm/dd'}); </script>"
+		$('#interact').html(content);
+		window.localStorage["step"]=1;
+	}
+	
+	else if(window.localStorage["step"]==1){
+		
+		var content="<p>請確認是否繳款</p>"
+		+"<table>"
+		+"<tr><td>金額:"+window.localStorage['debt']+"元</td></tr>";
+		content+="</table>"
+		+"<input type='button' onclick='debt()' value='確認繳款'/>"
+		+"<button type=\"reset\" onclick='debt(\"pay\")'>取消繳款</button>";
+		$('#interact').html(content);
+		window.localStorage["step"]=2;
+	}
+   else if(window.localStorage["step"]==2){
+	$.ajax({
+		url: "performFuncs.php",
+		data: {"mode": window.localStorage['debtMode']},
+		type:"POST",
+		dataType:'text',
+		success: function(msg){
+			$("#interact").html(msg);
+		},
+		 error:function(xhr, ajaxOptions, thrownError){ 
+			alert(xhr.status); 
+			alert(thrownError); 
+		 }
+	});
+	
+   }
+ };
+ 
