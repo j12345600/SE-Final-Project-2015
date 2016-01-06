@@ -87,11 +87,15 @@
 		   echo "
 		 <table>
 		<tr><td>還款成功</td></tr>
-		<tr><td><button type=\"reset\" onclick=\"location.href='../bank'\">返回選單</button></td></tr>
+		<tr><td><button type=\"reset\" onclick=\"location.href='../bank'\" class='button'>返回選單</button></td></tr></table>
 		</table>";
 	   }
 	   else {
-		 
+		  echo "
+		 <table>
+		<tr><td>餘額不足</td></tr>
+		<tr><td><button type=\"reset\" onclick=\"location.href='../bank'\" class='button'>返回選單</button></td></tr></table>
+		</table>";
 	   }
    }
    else if($mode=='balance'){
