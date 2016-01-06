@@ -22,12 +22,13 @@
 		$bankAccount=$row['accountNum'];
 		$cookieData = (object) array( "data" => $data, "expiry" => $expiry,"bankAct"=>$bankAccount);
    		setcookie("login", json_encode( $cookieData ), $expiry);
+		echo "<input type='button' onclick='logout()' value='登出' class='button' id='logout'/>";
    		echo "<h3 id=welcom>Welcome " . $data ." </h3>";
    		echo "<p id=timelf align='center'>Time left:".( $expiry-time())." Sec(s)</p><div id=content>" ;
    		readfile("form.html");
    	  echo'</div>';
    	} 
-   else {echo "Login in fail!";
+   else {echo "<h1 welcom>Login in fail!</h1>";
  		readfile("loginform.html");}
 		
 

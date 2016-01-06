@@ -9,6 +9,8 @@
 		   $fbalance-=$amount;
 		   $query="UPDATE account_list SET balance='$fbalance' WHERE accountNum='$from'";
 		   mysql_query($query) or die(mysql_error());
+		   $query ="insert into history_record(accountNUM,Inwardremittance,Outwardremittance, balance) 					   		   values($from,0,$amount,$fbalance)";
+		   mysql_query($query) or die(mysql_error());
 	   }
 	   else {echo "cann't find account $from";exit();}
 	   if($BankCode=='000'){
@@ -21,6 +23,8 @@
 			   $tbalance+=$amount;
 			   $query="UPDATE account_list SET balance='$tbalance' WHERE accountNum='$to'";
 			   mysql_query($query) or die(mysql_error());
+			   $query ="insert into history_record(accountNUM,Inwardremittance,Outwardremittance, balance) 							   values($to,$amount,0,$tbalance)";
+		   	   mysql_query($query) or die(mysql_error());
 			   }
 			else {echo "cann't find account $to";exit();}
 	   }
@@ -78,6 +82,8 @@
 		   mysql_query($query) or die(mysql_error());
 		   $query="UPDATE account_list SET debt='0' WHERE accountNum='$bankAct'";
 		   mysql_query($query) or die(mysql_error());
+		   $query ="insert into history_record(accountNUM,Inwardremittance,Outwardremittance, balance) 					   		   values($bankAct,0,$debt,$left)";
+		   mysql_query($query) or die(mysql_error());
 		   echo "
 		 <table>
 		<tr><td>還款成功</td></tr>
@@ -85,11 +91,7 @@
 		</table>";
 	   }
 	   else {
-		 echo "
-		 <table>
-		<tr><td>餘額不足</td></tr>
-		<tr><td><button type=\"reset\" onclick=\"location.href='../bank'\">返回選單</button></td></tr>
-		</table>";
+		 
 	   }
    }
    else if($mode=='balance'){
@@ -102,5 +104,17 @@
 	   else {echo "cann't find account $bankAct";exit();}
 	   echo $balance;
    }
-   
+  
+   else if($mode=='log'){
+   		 $dater=$_POST['date'];
+   		$date=DateTime::createFromFormat('Y/m/d H:i:s', $dater.'23:59:59');
+   		$mysql_date_string=$date->format('Y-m-d H:i:s');
+	   $query= "SELECT * FROM history_record WHERE accountNUM = '$bankAct' AND date<='$mysql_date_string' ";
+	   $qry_result=mysql_query($query) or die(mysql_error());
+ 	   while($row = mysql_fetch_array($qry_result)) {
+			
+	 		echo "
+			 <tr><td>$row[0]</td><td>$row[1]</td><td>$row[2]</td><td>$row[3]</td><td>$row[4]</td></tr>";
+	   }
+    }
 ?>
